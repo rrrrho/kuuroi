@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+
+:root {
+  font-family: 'Cormorant Garamond', 'Baskerville', 'Times New Roman', serif;
+  color: #efe7df;
+  background: #050304;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: #050304;
+  scroll-behavior: smooth;
+  scrollbar-color: #82101b #080506;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080506;
+  border-left: 1px solid rgba(102, 18, 25, 0.42);
+}
+
+::-webkit-scrollbar-thumb {
+  min-height: 64px;
+  border: 3px solid #080506;
+  border-radius: 0;
+  background: #82101b;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a51624;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

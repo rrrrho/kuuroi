@@ -1,0 +1,578 @@
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
+import './App.css'
+import artistPortrait from './assets/artist-portrait.jpg'
+import workCalice from './assets/work-calice.jpg'
+import workCrepuscule from './assets/work-crepuscule.jpg'
+import workFlosMortis from './assets/work-flos-mortis.jpg'
+import workMirrors from './assets/work-mirrors.jpg'
+import workNocturne from './assets/work-nocturne.jpg'
+import workPeonies from './assets/work-peonies.jpg'
+
+const works = [
+  {
+    image: workCrepuscule,
+    alt: 'Figura cubierta de marfil recorriendo una catedral en penumbra',
+    medium: 'ÓLEO SOBRE LIENZO',
+    name: "L'Étreinte du Crépuscule",
+    year: '2025',
+    title: "L'ÉTREINTE DU CRÉPUSCULE",
+    description: 'Óleo sobre lino belga, pigmentos de cinabrio y asfalto negro',
+    status: 'COLECCIÓN PRIVADA',
+    layout: 'work-wide',
+  },
+  {
+    image: workPeonies,
+    alt: 'Peonías carmesí emergiendo sobre un fondo negro',
+    medium: 'ÓLEO SOBRE TABLA',
+    name: 'Vanitas Sanguinis: Peonías en Llamas',
+    year: '2024',
+    title: 'VANITAS SANGUINIS: PEONÍAS EN LLAMAS',
+    description: 'Óleo y resina de damar sobre tabla de nogal encerada',
+    status: 'DISPONIBLE',
+    layout: 'work-narrow',
+  },
+  {
+    image: workCalice,
+    alt: 'Mano esquelética sosteniendo una copa frente a una luna dorada',
+    medium: 'ÓLEO SOBRE LIENZO',
+    name: "Le Calice d'Ébène",
+    year: '2024',
+    title: "LE CALICE D'ÉBÈNE",
+    description: 'Óleo tenebrista con barniz holandés brillante',
+    status: 'DISPONIBLE',
+    layout: 'work-narrow',
+  },
+  {
+    image: workMirrors,
+    alt: 'Velas rojas encendidas junto a un espejo antiguo',
+    medium: 'ÓLEO SOBRE LIENZO',
+    name: 'La Vigilia de los Espejos Sombríos',
+    year: '2025',
+    title: 'LA VIGILIA DE LOS ESPEJOS SOMBRÍOS',
+    description: 'Óleo con empastes densos y pigmentos fluorescentes orgánicos',
+    status: 'DISPONIBLE',
+    layout: 'work-wide',
+  },
+  {
+    image: workFlosMortis,
+    alt: 'Flor de pétalos marfil atravesados por vetas carmesí',
+    medium: 'ÓLEO SOBRE TABLA',
+    name: 'Flos Mortis: La Flor Cadavérica',
+    year: '2024',
+    title: 'FLOS MORTIS: LA FLOR CADAVÉRICA',
+    description: 'Óleo sobre tabla estucada con veladuras sucesivas de cochinilla',
+    status: 'DISPONIBLE',
+    layout: 'work-narrow',
+  },
+  {
+    image: workNocturne,
+    alt: 'Figura solitaria ante la entrada de una cripta bajo una luna roja',
+    medium: 'ÓLEO SOBRE LIENZO',
+    name: 'Nocturne in Crypta: El Despertar',
+    year: '2025',
+    title: 'NOCTURNE IN CRYPTA: EL DESPERTAR',
+    description: 'Óleo sobre lino grueso con barniz de betún diluido',
+    status: 'COLECCIÓN PRIVADA',
+    layout: 'work-narrow',
+  },
+]
+
+function FlameIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M13.1 2.9c.5 3.2-2.7 4.8-2.2 7.4.2 1 1 1.6 1.8 1.8-.1-1.5.7-2.8 2.1-3.8.1 2.3 3 3.7 3 7.1 0 3.3-2.5 5.6-5.8 5.6s-5.8-2.4-5.8-5.7c0-2.9 1.7-5 3.8-6.8-.2 2.8.7 3.7 1.6 4-1.2-4.3 3.3-5.2 1.5-9.6Z" />
+    </svg>
+  )
+}
+
+function MailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3" y="5.5" width="18" height="13" rx="1" />
+      <path d="m4 7 8 6 8-6" />
+    </svg>
+  )
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 4v15M6.5 13.5 12 19l5.5-5.5" />
+    </svg>
+  )
+}
+
+function QuillIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M19.8 3.8c-4.9-.3-9.6 2.5-11.5 7l-2.8 6.8m2.8-6.8 4.1 4.1m-6.9 2.7 4.7-.5c5.2-.5 9.2-5 9.6-10.2l.2-3.1-3.1.2c-2.7.2-5.2 1.3-7.1 3.1" />
+    </svg>
+  )
+}
+
+function PinIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20 10c0 5.1-8 11-8 11s-8-5.9-8-11a8 8 0 1 1 16 0Z" />
+      <circle cx="12" cy="10" r="2.4" />
+    </svg>
+  )
+}
+
+function ShieldIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 3 5 6v5c0 4.7 2.7 8.1 7 10 4.3-1.9 7-5.3 7-10V6l-7-3Z" />
+      <path d="m9.5 12 1.7 1.7 3.6-4" />
+    </svg>
+  )
+}
+
+function SendIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="m21 3-8.1 18-2.3-7.6L3 11.1 21 3Z" />
+      <path d="m10.6 13.4 4.7-4.7" />
+    </svg>
+  )
+}
+
+function ArtworkCard({
+  work,
+  onOpen,
+}: {
+  work: (typeof works)[number]
+  onOpen: (work: (typeof works)[number]) => void
+}) {
+  return (
+    <article className={`artwork-card ${work.layout}`}>
+      <figure className="artwork-visual">
+        <img src={work.image} alt={work.alt} />
+        <figcaption>
+          <span>
+            <strong>{work.medium}</strong>
+            <em>{work.name}</em>
+          </span>
+          <time>{work.year}</time>
+        </figcaption>
+        <button
+          className="artwork-hitarea"
+          type="button"
+          aria-label={`Ampliar ${work.title}`}
+          onClick={() => onOpen(work)}
+        >
+          <span className="expand-prompt">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8.5 3H3v5.5M15.5 21H21v-5.5M3 8.5 9 2.5M21 15.5l-6 6" />
+            </svg>
+            AMPLIAR IMAGEN
+          </span>
+        </button>
+      </figure>
+      <footer className="artwork-details">
+        <span>
+          <strong>{work.title}</strong>
+          <small>{work.description}</small>
+        </span>
+        <span className="artwork-state">
+          <time>{work.year}</time>
+          <small>{work.status}</small>
+        </span>
+      </footer>
+    </article>
+  )
+}
+
+function App() {
+  const [selectedWork, setSelectedWork] = useState<(typeof works)[number] | null>(
+    null,
+  )
+
+  useEffect(() => {
+    if (!selectedWork) return
+
+    const previousOverflow = document.body.style.overflow
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedWork(null)
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', closeOnEscape)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [selectedWork])
+
+  return (
+    <main className="page-shell">
+      <header className="site-header">
+        <div className="header-inner">
+          <div className="wordmark" aria-label="Kuuroi">
+            KUUROI
+          </div>
+
+          <nav className="main-nav" aria-label="Navegación principal">
+            <a href="#sobre-la-artista">SOBRE LA ARTISTA</a>
+            <a href="#obras">OBRAS</a>
+            <a href="#contacto">CONTACTO</a>
+          </nav>
+
+          <button className="commission-button" type="button">
+            <MailIcon />
+            <span>COMISIONES</span>
+          </button>
+        </div>
+      </header>
+
+      <section className="hero-section" aria-labelledby="hero-title">
+        <div className="ambient-art" aria-hidden="true">
+          <span className="shadow shadow-one" />
+          <span className="shadow shadow-two" />
+          <span className="shadow shadow-three" />
+        </div>
+
+        <div className="hero-content">
+          <div className="eyebrow">
+            <FlameIcon />
+            <span>ATELIER DE ARTE GÓTICO - PINTURAS E ILUSTRACIONES REALISTAS</span>
+          </div>
+
+          <h1 id="hero-title">
+            <span>ARTE QUE MANIFIESTA</span>
+            <span>
+              LA <em>INMORTALIDAD</em><b>.</b>
+            </span>
+          </h1>
+
+          <p className="hero-quote">Proveniente de mi amor y mi reflejo.</p>
+
+          <p className="hero-description">
+            Obras al óleo sobre lienzo e ilustraciones tradicionales
+            <br />
+            realizadas con grafito. Técnicas de claroscuro y grisaille.
+          </p>
+
+          <div className="hero-actions" aria-label="Acciones destacadas">
+            <a className="primary-action" href="#obras">
+              <span>VER COLECCIÓN DE OBRAS</span>
+              <ArrowIcon />
+            </a>
+            <a className="secondary-action" href="#sobre-la-artista">
+              SOBRE LA ARTISTA
+            </a>
+          </div>
+
+          <div className="memento" aria-label="Memento mori">
+            <span className="line" />
+            <span className="diamond">♦</span>
+            <span>MEMENTO MORI</span>
+            <span className="diamond">♦</span>
+            <span className="line" />
+          </div>
+        </div>
+      </section>
+
+      <section
+        className="about-section"
+        id="sobre-la-artista"
+        aria-labelledby="about-title"
+      >
+        <div className="about-inner">
+          <header className="about-heading">
+            <span>CAPÍTULO I · DUOMO</span>
+            <h2 id="about-title">SOBRE LA ARTISTA</h2>
+          </header>
+
+          <div className="about-grid">
+            <div className="artist-column">
+              <figure className="artist-portrait">
+                <img
+                  src={artistPortrait}
+                  alt="Retrato de la artista en su atelier"
+                />
+                <figcaption>
+                  <span>Retrato tomado en Florencia, Italia</span>
+                  <span>Circa 2024</span>
+                </figcaption>
+              </figure>
+
+              <div className="atelier-card">
+                <strong>ATELIER</strong>
+                <span>Buenos Aires, Argentina.</span>
+              </div>
+            </div>
+
+            <div className="artist-story">
+              <blockquote>
+                «KUUROI es el reflejo de mi esencia y mi manera de inmortalizar
+                una emoción interna. Crear una proyección artística trabajada
+                con pinceladas sumamente expresivas es mi propósito.»
+              </blockquote>
+
+              <div className="biography">
+                <p>
+                  Mi arte se encuentra influenciado por mis pasiones a lo largo
+                  de mi desarrollo.
+                </p>
+                <p>
+                  Grandes referentes como Héctor Giuffré influyeron en mis
+                  comienzos como artista junto a pintores como Eduardo Sívori y
+                  referentes internacionales del expresionismo tradicional.
+                </p>
+                <p>
+                  Mi formación académica en Florencia, Italia permitió
+                  profundizarme en el arte académico de los maestros de la
+                  Antigua Academia y mi técnica consiste en manejo de
+                  claroscuro, grisaille y grafito.
+                </p>
+                <p>
+                  Expuse en centros de galerías, hoteles, teatros y
+                  convenciones en la ciudad de Buenos Aires y Córdoba.
+                </p>
+                <p>
+                  Siempre pensando en vivo o exponiendo las creaciones del
+                  momento presente.
+                </p>
+              </div>
+
+              <aside className="recognition-card">
+                <strong>CLAROSCURO TENEBRISTA</strong>
+                <span>Concurso temático homenaje de Eduardo Sívori.</span>
+              </aside>
+
+              <div className="exhibitions">
+                <h3>EXPOSICIONES &amp; SALONES SELECTOS</h3>
+                <ol>
+                  <li>
+                    <time>2023</time>
+                    <span>«Open Gallery Y Fungi Techno»</span>
+                  </li>
+                  <li>
+                    <time>2024</time>
+                    <span>«Comic Con Argentina»</span>
+                  </li>
+                  <li>
+                    <time>2024</time>
+                    <span>«Open Gallery Y Grand Brizo Buenos Aires»</span>
+                  </li>
+                  <li>
+                    <time>2024</time>
+                    <span>«Open Gallery Y Conviverse»</span>
+                  </li>
+                  <li>
+                    <time>2025</time>
+                    <span>«Hostería El Durazno»</span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="works-section" id="obras" aria-labelledby="works-title">
+        <div className="works-inner">
+          <header className="works-header">
+            <div className="works-heading">
+              <span>CAPÍTULO II · CATÁLOGO DEL ATELIER</span>
+              <h2 id="works-title">TRABAJOS &amp; OBRAS</h2>
+              <p>
+                Colección permanente de lienzos. Selección de obras de arte,
+                estudios realizados y comisiones personalizadas a pedido.
+              </p>
+            </div>
+
+            <div className="catalog-controls" aria-label="Controles del catálogo">
+              <div className="filter-group" aria-label="Filtros de obra">
+                <button type="button">TODAS (6)</button>
+                <button className="is-active" type="button">ÓLEOS</button>
+                <button type="button">ESTUDIOS</button>
+              </div>
+              <div className="view-group" aria-label="Vista del catálogo">
+                <button className="is-active" type="button" aria-label="Vista editorial">
+                  <svg viewBox="0 0 18 18" aria-hidden="true">
+                    <rect x="2" y="2" width="5" height="14" />
+                    <rect x="10" y="2" width="6" height="14" />
+                  </svg>
+                </button>
+                <button type="button" aria-label="Vista en grilla">
+                  <svg viewBox="0 0 18 18" aria-hidden="true">
+                    <rect x="2" y="2" width="5" height="5" />
+                    <rect x="11" y="2" width="5" height="5" />
+                    <rect x="2" y="11" width="5" height="5" />
+                    <rect x="11" y="11" width="5" height="5" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <div className="artworks-grid">
+            {works.map((work) => (
+              <ArtworkCard key={work.title} work={work} onOpen={setSelectedWork} />
+            ))}
+          </div>
+
+          <footer className="catalog-note">
+            <p>
+              Todas las obras son piezas únicas creadas al óleo sobre soportes
+              tradicionales preparados a mano. No se producen reproducciones
+              digitales ni giclée comerciales.
+            </p>
+            <strong>ARCHIVADO BAJO EL SELLO DEL MURCIÉLAGO DE ÉBANO</strong>
+          </footer>
+        </div>
+      </section>
+
+      <section
+        className="contact-section"
+        id="contacto"
+        aria-labelledby="contact-title"
+      >
+        <div className="contact-inner">
+          <header className="contact-heading">
+            <span>CAPÍTULO III · ESTUDIO DE ARTE</span>
+            <h2 id="contact-title">CONTACTO</h2>
+            <p>Para entregas de pedidos personalizados.</p>
+          </header>
+
+          <div className="contact-grid">
+            <form className="inquiry-card" aria-label="Consulta de obra">
+              <div className="form-intro">
+                <div>
+                  <QuillIcon />
+                  <h3>DESPACHO DE CORRESPONDENCIA</h3>
+                </div>
+                <p>Completar los datos para reservar una obra de arte.</p>
+              </div>
+
+              <div className="form-fields">
+                <label>
+                  <span>SOLICITANTE <b>*</b></span>
+                  <input type="text" placeholder="Tu nombre completo" />
+                </label>
+
+                <label>
+                  <span>CONSULTA</span>
+                  <span className="select-field">
+                    <select defaultValue="adquisicion">
+                      <option value="adquisicion">Adquisición de Lienzo al Óleo</option>
+                      <option value="comision">Comisión personalizada</option>
+                      <option value="informacion">Información sobre una obra</option>
+                    </select>
+                  </span>
+                </label>
+
+                <label>
+                  <span>LIENZO DE REFERENCIA O ASUNTO</span>
+                  <input type="text" placeholder="Ej. Obra de Edward Scissorhands" />
+                </label>
+
+                <label>
+                  <span>FORMATO <b>*</b></span>
+                  <textarea placeholder="Dimensiones deseadas, técnica, soporte o detalles del encargo..." />
+                </label>
+              </div>
+
+              <button className="dispatch-button" type="button">
+                <SendIcon />
+                <span>SELLAR Y DESPACHAR MISIVA</span>
+              </button>
+
+              <small className="form-disclaimer">
+                Toda correspondencia se maneja con estricta confidencialidad artesanal.
+              </small>
+            </form>
+
+            <div className="contact-asides">
+              <aside className="coordinates-card">
+                <h3>COORDENADAS DEL ATELIER</h3>
+                <div className="contact-detail">
+                  <MailIcon />
+                  <span>
+                    <small>MAIL DE CONSULTAS DE TRABAJO</small>
+                    <strong>kuuroi882@gmail.com</strong>
+                  </span>
+                </div>
+                <div className="contact-detail">
+                  <PinIcon />
+                  <span>
+                    <small>SEDE DEL ATELIER</small>
+                    <strong>Buenos Aires, Argentina.</strong>
+                  </span>
+                </div>
+              </aside>
+
+              <aside className="protocol-card">
+                <div className="protocol-title">
+                  <ShieldIcon />
+                  <h3>PROTOCOLO DE ENCARGOS AL ÓLEO</h3>
+                </div>
+                <p>
+                  <strong>Período de Curado:</strong> De 2 semanas en adelante
+                  dependiendo la técnica aplicada.
+                </p>
+                <p>
+                  <strong>Embalaje &amp; Envío Seguro:</strong> Las obras adquiridas
+                  se envían y entregan envueltas sobre papel burbuja y en cartón
+                  protector.
+                </p>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="site-footer">
+        <div className="footer-inner">
+          <div className="footer-signature">
+            <strong>KUUROI</strong>
+            <small>Todos los derechos reservados · 2026</small>
+          </div>
+          <button className="back-to-top" type="button">
+            CIMA <span>↑</span>
+          </button>
+        </div>
+      </footer>
+
+      {selectedWork &&
+        createPortal(
+          <div
+            className="artwork-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedWork.title}
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setSelectedWork(null)
+            }}
+          >
+            <button
+              className="modal-close"
+              type="button"
+              aria-label="Cerrar imagen ampliada"
+              autoFocus
+              onClick={() => setSelectedWork(null)}
+            >
+              ×
+            </button>
+            <figure className="modal-artwork">
+              <img src={selectedWork.image} alt={selectedWork.alt} />
+              <figcaption>
+                <span>
+                  <small>{selectedWork.medium}</small>
+                  <strong>{selectedWork.title}</strong>
+                </span>
+                <time>{selectedWork.year}</time>
+              </figcaption>
+            </figure>
+          </div>,
+          document.body,
+        )}
+    </main>
+  )
+}
+
+export default App
