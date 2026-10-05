@@ -1,4 +1,10 @@
-import { useEffect, useState } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from 'react'
 import { createPortal } from 'react-dom'
 import './App.css'
 import artistPortrait from './assets/artist-portrait.jpg'
@@ -78,6 +84,13 @@ const works = [
   },
 ]
 
+const CONTACT_FORM_NAME = 'commission-request'
+const MAX_REFERENCE_IMAGES = 6
+const MAX_UPLOAD_BYTES = 7 * 1024 * 1024
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
+type SubmitState = 'idle' | 'submitting' | 'success' | 'error'
+
 function FlameIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -138,6 +151,15 @@ function SendIcon() {
   )
 }
 
+function UploadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 16V4M7.5 8.5 12 4l4.5 4.5" />
+      <path d="M4 14.5V20h16v-5.5" />
+    </svg>
+  )
+}
+
 function ArtworkCard({
   work,
   onOpen,
@@ -188,6 +210,17 @@ function App() {
   const [selectedWork, setSelectedWork] = useState<(typeof works)[number] | null>(
     null,
   )
+  const [catalogView, setCatalogView] = useState<'editorial' | 'grid'>(
+    'editorial',
+  )
+  const [referenceImages, setReferenceImages] = useState<
+    Array<{ id: string; file: File; url: string }>
+  >([])
+  const [uploadError, setUploadError] = useState('')
+  const [submitState, setSubmitState] = useState<SubmitState>('idle')
+  const [submitMessage, setSubmitMessage] = useState('')
+  const referenceImageUrls = useRef<string[]>([])
+  const inquiryForm = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
     if (!selectedWork) return
@@ -205,6 +238,119 @@ function App() {
       window.removeEventListener('keydown', closeOnEscape)
     }
   }, [selectedWork])
+
+  useEffect(
+    () => () => {
+      referenceImageUrls.current.forEach((url) => URL.revokeObjectURL(url))
+    },
+    [],
+  )
+
+  const handleReferenceImages = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(event.target.files ?? [])
+    const files = selectedFiles.filter((file) =>
+      ACCEPTED_IMAGE_TYPES.includes(file.type),
+    )
+    const availableSlots = MAX_REFERENCE_IMAGES - referenceImages.length
+    let totalBytes = referenceImages.reduce(
+      (total, image) => total + image.file.size,
+      0,
+    )
+    let exceededSize = false
+
+    const acceptedFiles = files.slice(0, availableSlots).filter((file) => {
+      if (totalBytes + file.size > MAX_UPLOAD_BYTES) {
+        exceededSize = true
+        return false
+      }
+
+      totalBytes += file.size
+      return true
+    })
+
+    if (selectedFiles.some((file) => !ACCEPTED_IMAGE_TYPES.includes(file.type))) {
+      setUploadError('Solo se admiten imágenes PNG, JPG o WEBP.')
+    } else if (files.length > availableSlots) {
+      setUploadError(`Podés adjuntar hasta ${MAX_REFERENCE_IMAGES} imágenes.`)
+    } else if (exceededSize) {
+      setUploadError('Las imágenes no pueden superar 7 MB en total.')
+    } else {
+      setUploadError('')
+    }
+
+    const nextImages = acceptedFiles.map((file, index) => {
+      const url = URL.createObjectURL(file)
+      referenceImageUrls.current.push(url)
+      return {
+        id: `${file.name}-${file.lastModified}-${file.size}-${Date.now()}-${index}`,
+        file,
+        url,
+      }
+    })
+
+    setReferenceImages((current) => [...current, ...nextImages])
+    event.target.value = ''
+  }
+
+  const removeReferenceImage = (id: string) => {
+    setReferenceImages((current) => {
+      const image = current.find((item) => item.id === id)
+      if (image) {
+        URL.revokeObjectURL(image.url)
+        referenceImageUrls.current = referenceImageUrls.current.filter(
+          (url) => url !== image.url,
+        )
+      }
+      return current.filter((item) => item.id !== id)
+    })
+    setUploadError('')
+  }
+
+  const clearReferenceImages = () => {
+    referenceImages.forEach((image) => URL.revokeObjectURL(image.url))
+    referenceImageUrls.current = []
+    setReferenceImages([])
+    setUploadError('')
+  }
+
+  const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (submitState === 'submitting') return
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    referenceImages.forEach((image, index) => {
+      formData.append(
+        `reference_image_${index + 1}`,
+        image.file,
+        image.file.name,
+      )
+    })
+
+    setSubmitState('submitting')
+    setSubmitMessage('Enviando tu consulta...')
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: formData,
+      })
+
+      if (!response.ok) throw new Error('Netlify rejected the form submission')
+
+      form.reset()
+      clearReferenceImages()
+      setSubmitState('success')
+      setSubmitMessage('Tu consulta fue enviada correctamente.')
+    } catch {
+      setSubmitState('error')
+      setSubmitMessage(
+        'No pudimos enviar la consulta. Revisá tu conexión e intentá nuevamente.',
+      )
+    }
+  }
 
   return (
     <main className="page-shell">
@@ -386,19 +532,26 @@ function App() {
             </div>
 
             <div className="catalog-controls" aria-label="Controles del catálogo">
-              <div className="filter-group" aria-label="Filtros de obra">
-                <button type="button">TODAS (6)</button>
-                <button className="is-active" type="button">ÓLEOS</button>
-                <button type="button">ESTUDIOS</button>
-              </div>
               <div className="view-group" aria-label="Vista del catálogo">
-                <button className="is-active" type="button" aria-label="Vista editorial">
+                <button
+                  className={catalogView === 'editorial' ? 'is-active' : undefined}
+                  type="button"
+                  aria-label="Vista editorial"
+                  aria-pressed={catalogView === 'editorial'}
+                  onClick={() => setCatalogView('editorial')}
+                >
                   <svg viewBox="0 0 18 18" aria-hidden="true">
                     <rect x="2" y="2" width="5" height="14" />
                     <rect x="10" y="2" width="6" height="14" />
                   </svg>
                 </button>
-                <button type="button" aria-label="Vista en grilla">
+                <button
+                  className={catalogView === 'grid' ? 'is-active' : undefined}
+                  type="button"
+                  aria-label="Vista en grilla"
+                  aria-pressed={catalogView === 'grid'}
+                  onClick={() => setCatalogView('grid')}
+                >
                   <svg viewBox="0 0 18 18" aria-hidden="true">
                     <rect x="2" y="2" width="5" height="5" />
                     <rect x="11" y="2" width="5" height="5" />
@@ -410,7 +563,9 @@ function App() {
             </div>
           </header>
 
-          <div className="artworks-grid">
+          <div
+            className={`artworks-grid${catalogView === 'grid' ? ' is-grid' : ''}`}
+          >
             {works.map((work) => (
               <ArtworkCard key={work.title} work={work} onOpen={setSelectedWork} />
             ))}
@@ -440,7 +595,28 @@ function App() {
           </header>
 
           <div className="contact-grid">
-            <form className="inquiry-card" aria-label="Consulta de obra">
+            <form
+              ref={inquiryForm}
+              className="inquiry-card"
+              name={CONTACT_FORM_NAME}
+              method="POST"
+              encType="multipart/form-data"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+              aria-label="Consulta de obra"
+              onSubmit={handleInquirySubmit}
+            >
+              <input type="hidden" name="form-name" value={CONTACT_FORM_NAME} />
+              <input
+                type="hidden"
+                name="subject"
+                value="Nueva consulta desde KUUROI"
+              />
+              <label className="honeypot-field" aria-hidden="true">
+                No completar
+                <input name="bot-field" tabIndex={-1} autoComplete="off" />
+              </label>
+
               <div className="form-intro">
                 <div>
                   <QuillIcon />
@@ -452,13 +628,30 @@ function App() {
               <div className="form-fields">
                 <label>
                   <span>SOLICITANTE <b>*</b></span>
-                  <input type="text" placeholder="Tu nombre completo" />
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Tu nombre completo"
+                    autoComplete="name"
+                    required
+                  />
+                </label>
+
+                <label>
+                  <span>CORREO ELECTRÓNICO <b>*</b></span>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="tu@email.com"
+                    autoComplete="email"
+                    required
+                  />
                 </label>
 
                 <label>
                   <span>CONSULTA</span>
                   <span className="select-field">
-                    <select defaultValue="adquisicion">
+                    <select name="inquiry_type" defaultValue="adquisicion">
                       <option value="adquisicion">Adquisición de Lienzo al Óleo</option>
                       <option value="comision">Comisión personalizada</option>
                       <option value="informacion">Información sobre una obra</option>
@@ -468,19 +661,109 @@ function App() {
 
                 <label>
                   <span>LIENZO DE REFERENCIA O ASUNTO</span>
-                  <input type="text" placeholder="Ej. Obra de Edward Scissorhands" />
+                  <input
+                    type="text"
+                    name="artwork_reference"
+                    placeholder="Ej. Obra de Edward Scissorhands"
+                  />
                 </label>
+
+                <div className="upload-field">
+                  <span className="upload-label">IMÁGENES DE REFERENCIA</span>
+                  <label className="upload-dropzone">
+                    <input
+                      className="upload-input"
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      multiple
+                      disabled={
+                        referenceImages.length >= MAX_REFERENCE_IMAGES ||
+                        submitState === 'submitting'
+                      }
+                      onChange={handleReferenceImages}
+                    />
+                    <UploadIcon />
+                    <span>
+                      <strong>ADJUNTAR IMÁGENES</strong>
+                      <small>PNG, JPG o WEBP · hasta 6 imágenes / 7 MB</small>
+                    </span>
+                  </label>
+
+                  {uploadError && (
+                    <small className="upload-error" role="alert">
+                      {uploadError}
+                    </small>
+                  )}
+
+                  {referenceImages.length > 0 && (
+                    <>
+                      <div className="upload-summary">
+                        <span>
+                          {referenceImages.length}{' '}
+                          {referenceImages.length === 1 ? 'imagen adjunta' : 'imágenes adjuntas'}
+                        </span>
+                        <button type="button" onClick={clearReferenceImages}>
+                          QUITAR TODAS
+                        </button>
+                      </div>
+                      <div
+                        className={`upload-previews${referenceImages.length === 1 ? ' is-single' : ''}`}
+                      >
+                        {referenceImages.map((image) => (
+                          <figure className="upload-preview" key={image.id}>
+                            <img
+                              src={image.url}
+                              alt={`Vista previa de ${image.file.name}`}
+                            />
+                            <figcaption title={image.file.name}>
+                              {image.file.name}
+                            </figcaption>
+                            <button
+                              type="button"
+                              aria-label={`Quitar ${image.file.name}`}
+                              onClick={() => removeReferenceImage(image.id)}
+                            >
+                              ×
+                            </button>
+                          </figure>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
 
                 <label>
                   <span>FORMATO <b>*</b></span>
-                  <textarea placeholder="Dimensiones deseadas, técnica, soporte o detalles del encargo..." />
+                  <textarea
+                    name="details"
+                    placeholder="Dimensiones deseadas, técnica, soporte o detalles del encargo..."
+                    required
+                  />
                 </label>
               </div>
 
-              <button className="dispatch-button" type="button">
+              <button
+                className="dispatch-button"
+                type="submit"
+                disabled={submitState === 'submitting'}
+              >
                 <SendIcon />
-                <span>SELLAR Y DESPACHAR MISIVA</span>
+                <span>
+                  {submitState === 'submitting'
+                    ? 'DESPACHANDO MISIVA...'
+                    : 'SELLAR Y DESPACHAR MISIVA'}
+                </span>
               </button>
+
+              {submitMessage && (
+                <p
+                  className={`form-status is-${submitState}`}
+                  role={submitState === 'error' ? 'alert' : 'status'}
+                  aria-live="polite"
+                >
+                  {submitMessage}
+                </p>
+              )}
 
               <small className="form-disclaimer">
                 Toda correspondencia se maneja con estricta confidencialidad artesanal.

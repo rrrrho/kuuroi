@@ -683,7 +683,6 @@ h1 b {
   gap: 16px;
 }
 
-.filter-group,
 .view-group {
   min-height: 42px;
   display: inline-flex;
@@ -691,7 +690,6 @@ h1 b {
   background: rgba(21, 7, 9, 0.62);
 }
 
-.filter-group button,
 .view-group button {
   border: 0;
   border-right: 1px solid rgba(104, 20, 27, 0.55);
@@ -703,17 +701,10 @@ h1 b {
   letter-spacing: 0.08em;
 }
 
-.filter-group button {
-  min-width: 76px;
-  padding: 0 15px;
-}
-
-.filter-group button:last-child,
 .view-group button:last-child {
   border-right: 0;
 }
 
-.filter-group button.is-active,
 .view-group button.is-active {
   color: #eadfd8;
   background: #5c0c14;
@@ -724,6 +715,19 @@ h1 b {
   padding: 0;
   display: grid;
   place-items: center;
+  cursor: pointer;
+  transition:
+    color 220ms ease,
+    background 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.view-group button:hover,
+.view-group button:focus-visible {
+  color: #eee1d9;
+  outline: none;
+  background: rgba(91, 12, 21, 0.7);
+  box-shadow: inset 0 0 12px rgba(165, 21, 35, 0.14);
 }
 
 .view-group svg {
@@ -739,6 +743,98 @@ h1 b {
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 26px;
   align-items: start;
+}
+
+.artworks-grid.is-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.artworks-grid.is-grid .artwork-card.work-wide,
+.artworks-grid.is-grid .artwork-card.work-narrow {
+  grid-column: span 1;
+}
+
+.artworks-grid.is-grid .artwork-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: catalog-card-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.artworks-grid.is-grid .artwork-visual {
+  height: 340px;
+  flex: 0 0 auto;
+}
+
+.artworks-grid.is-grid .artwork-visual img {
+  object-position: center;
+}
+
+.artworks-grid.is-grid .artwork-visual figcaption {
+  right: 12px;
+  bottom: 11px;
+  left: 12px;
+}
+
+.artworks-grid.is-grid .artwork-visual figcaption strong {
+  font-size: 9px;
+}
+
+.artworks-grid.is-grid .artwork-visual figcaption em {
+  font-size: 10px;
+}
+
+.artworks-grid.is-grid .artwork-details {
+  min-height: 148px;
+  flex: 1 1 auto;
+  align-items: stretch;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 15px;
+  padding: 18px 19px;
+}
+
+.artworks-grid.is-grid .artwork-details > span:first-child {
+  gap: 10px;
+}
+
+.artworks-grid.is-grid .artwork-details strong {
+  overflow: visible;
+  font-size: 15px;
+  line-height: 1.35;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.artworks-grid.is-grid .artwork-details small {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.65;
+  text-overflow: clip;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.artworks-grid.is-grid .artwork-state {
+  width: 100%;
+  margin-top: auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@keyframes catalog-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .artwork-card {
@@ -1285,6 +1381,10 @@ h1 b {
   gap: 20px;
 }
 
+.honeypot-field {
+  display: none !important;
+}
+
 .form-fields label {
   display: flex;
   flex-direction: column;
@@ -1363,6 +1463,198 @@ h1 b {
   resize: vertical;
 }
 
+.upload-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.upload-label {
+  color: #9e8b84;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+.form-fields .upload-dropzone {
+  position: relative;
+  min-height: 88px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 14px;
+  border: 1px dashed rgba(129, 31, 39, 0.9);
+  color: #9a8680;
+  background: rgba(28, 10, 14, 0.66);
+  cursor: pointer;
+  transition:
+    border-color 240ms ease,
+    color 240ms ease,
+    background 240ms ease,
+    box-shadow 240ms ease;
+}
+
+.form-fields .upload-dropzone:hover,
+.form-fields .upload-dropzone:focus-within {
+  border-color: #bd2433;
+  color: #d9cbc3;
+  background: rgba(48, 9, 15, 0.68);
+  box-shadow: inset 0 0 20px rgba(153, 17, 30, 0.09);
+}
+
+.upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.upload-dropzone > svg {
+  width: 23px;
+  height: 23px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: #bc2332;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.upload-dropzone > span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.upload-dropzone strong {
+  color: #d8cac2;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+.upload-dropzone small {
+  color: #76625f;
+  font-size: 9px;
+}
+
+.upload-error {
+  color: #d85c68;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.upload-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #957e77;
+  font-size: 10px;
+}
+
+.upload-summary button {
+  padding: 0;
+  border: 0;
+  color: #a8776b;
+  background: transparent;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.upload-summary button:hover,
+.upload-summary button:focus-visible {
+  color: #dc3444;
+  outline: none;
+}
+
+.upload-previews {
+  max-height: 285px;
+  padding: 2px 5px 2px 2px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+  scrollbar-color: #7c101a #100609;
+  scrollbar-width: thin;
+}
+
+.upload-previews.is-single {
+  grid-template-columns: minmax(0, 180px);
+}
+
+.upload-preview {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(108, 22, 29, 0.8);
+  background: #090405;
+}
+
+.upload-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-preview::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 42%;
+  pointer-events: none;
+  background: linear-gradient(transparent, rgba(5, 2, 3, 0.92));
+}
+
+.upload-preview figcaption {
+  position: absolute;
+  z-index: 1;
+  right: 7px;
+  bottom: 6px;
+  left: 7px;
+  overflow: hidden;
+  color: #c7b7af;
+  font-size: 8px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-preview button {
+  position: absolute;
+  z-index: 2;
+  top: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(173, 28, 41, 0.9);
+  border-radius: 0;
+  color: #eadbd3;
+  background: rgba(24, 5, 8, 0.88);
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.upload-preview button:hover,
+.upload-preview button:focus-visible {
+  border-color: #e03243;
+  outline: none;
+  background: #65101b;
+}
+
 .dispatch-button {
   width: 100%;
   height: 53px;
@@ -1379,6 +1671,25 @@ h1 b {
   line-height: 1;
   letter-spacing: 0.18em;
   font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 220ms ease,
+    background 220ms ease,
+    box-shadow 220ms ease,
+    opacity 220ms ease;
+}
+
+.dispatch-button:hover,
+.dispatch-button:focus-visible {
+  border-color: #d72a3a;
+  outline: none;
+  background: linear-gradient(180deg, #991624, #790e19);
+  box-shadow: 0 0 22px rgba(168, 18, 33, 0.2);
+}
+
+.dispatch-button:disabled {
+  cursor: wait;
+  opacity: 0.58;
 }
 
 .dispatch-button svg {
@@ -1386,6 +1697,25 @@ h1 b {
   height: 17px;
   stroke: #d6a15c;
   stroke-width: 1.5;
+}
+
+.form-status {
+  margin: 14px 0 0;
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.form-status.is-submitting {
+  color: #9e8378;
+}
+
+.form-status.is-success {
+  color: #c59a66;
+}
+
+.form-status.is-error {
+  color: #dc6570;
 }
 
 .form-disclaimer {
@@ -1836,6 +2166,32 @@ h1 b {
     gap: 20px;
   }
 
+  .artworks-grid.is-grid {
+    gap: 21px;
+  }
+
+  .artworks-grid.is-grid .artwork-visual {
+    height: 255px;
+  }
+
+  .artworks-grid.is-grid .artwork-details {
+    min-height: 111px;
+    padding: 13px 14px;
+    gap: 11px;
+  }
+
+  .artworks-grid.is-grid .artwork-details > span:first-child {
+    gap: 7px;
+  }
+
+  .artworks-grid.is-grid .artwork-details strong {
+    font-size: 11px;
+  }
+
+  .artworks-grid.is-grid .artwork-details small {
+    font-size: 8px;
+  }
+
   .artwork-visual {
     height: 380px;
   }
@@ -1911,16 +2267,6 @@ h1 b {
   .catalog-controls {
     width: 100%;
     flex-wrap: wrap;
-  }
-
-  .filter-group {
-    width: 100%;
-  }
-
-  .filter-group button {
-    min-width: 0;
-    flex: 1 1 0;
-    padding-inline: 9px;
   }
 
   .artworks-grid {
@@ -2323,19 +2669,12 @@ h1 b {
     gap: 12px;
   }
 
-  .filter-group,
   .view-group {
     min-height: 32px;
   }
 
-  .filter-group button,
   .view-group button {
     font-size: 9px;
-  }
-
-  .filter-group button {
-    min-width: 57px;
-    padding-inline: 11px;
   }
 
   .view-group button {
@@ -2353,6 +2692,32 @@ h1 b {
 
   .artwork-visual {
     height: 323px;
+  }
+
+  .artworks-grid.is-grid {
+    gap: 21px;
+  }
+
+  .artworks-grid.is-grid .artwork-visual {
+    height: 255px;
+  }
+
+  .artworks-grid.is-grid .artwork-details {
+    min-height: 111px;
+    padding: 13px 14px;
+    gap: 11px;
+  }
+
+  .artworks-grid.is-grid .artwork-details > span:first-child {
+    gap: 7px;
+  }
+
+  .artworks-grid.is-grid .artwork-details strong {
+    font-size: 11px;
+  }
+
+  .artworks-grid.is-grid .artwork-details small {
+    font-size: 8px;
   }
 
   .artwork-visual figcaption {
@@ -2467,6 +2832,67 @@ h1 b {
     padding: 11px 12px;
   }
 
+  .upload-field {
+    gap: 7px;
+  }
+
+  .upload-label {
+    font-size: 8px;
+  }
+
+  .form-fields .upload-dropzone {
+    min-height: 66px;
+    padding: 10px 13px;
+    gap: 10px;
+  }
+
+  .upload-dropzone > svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .upload-dropzone strong {
+    font-size: 8px;
+  }
+
+  .upload-dropzone small {
+    font-size: 7px;
+  }
+
+  .upload-error {
+    font-size: 7px;
+  }
+
+  .upload-summary {
+    font-size: 8px;
+  }
+
+  .upload-summary button {
+    font-size: 7px;
+  }
+
+  .upload-previews {
+    max-height: 214px;
+    grid-template-columns: repeat(auto-fill, minmax(69px, 1fr));
+    gap: 8px;
+  }
+
+  .upload-previews.is-single {
+    grid-template-columns: minmax(0, 135px);
+  }
+
+  .upload-preview figcaption {
+    font-size: 7px;
+  }
+
+  .upload-preview button {
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    font-size: 13px;
+  }
+
   .select-field::after {
     top: 13px;
     right: 14px;
@@ -2478,6 +2904,11 @@ h1 b {
     height: 40px;
     margin-top: 20px;
     font-size: 9px;
+  }
+
+  .form-status {
+    margin-top: 10px;
+    font-size: 8px;
   }
 
   .form-disclaimer {
@@ -2548,6 +2979,40 @@ h1 b {
   }
 }
 
+@media (max-width: 800px) {
+  .artworks-grid.is-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .artworks-grid.is-grid .artwork-card.work-wide,
+  .artworks-grid.is-grid .artwork-card.work-narrow {
+    grid-column: span 1;
+  }
+
+  .artworks-grid.is-grid .artwork-visual {
+    height: 430px;
+  }
+
+  .artworks-grid.is-grid .artwork-details {
+    min-height: 148px;
+    padding: 18px 19px;
+    gap: 15px;
+  }
+
+  .artworks-grid.is-grid .artwork-details > span:first-child {
+    gap: 10px;
+  }
+
+  .artworks-grid.is-grid .artwork-details strong {
+    font-size: 14px;
+  }
+
+  .artworks-grid.is-grid .artwork-details small {
+    font-size: 10px;
+  }
+}
+
 @media (hover: none) {
   .expand-prompt {
     position: absolute;
@@ -2569,6 +3034,36 @@ h1 b {
 }
 
 @media (max-width: 620px) {
+  .artworks-grid.is-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artworks-grid.is-grid .artwork-visual {
+    height: min(470px, 122vw);
+  }
+
+  .form-fields .upload-dropzone {
+    min-height: 94px;
+    padding-inline: 16px;
+  }
+
+  .upload-previews {
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 9px;
+  }
+
+  .upload-previews.is-single {
+    grid-template-columns: minmax(0, 190px);
+  }
+
+  .upload-preview button {
+    top: 5px;
+    right: 5px;
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
   .artwork-modal {
     padding: 14px;
   }
@@ -2611,6 +3106,8 @@ h1 b {
   .primary-action,
   .primary-action svg,
   .secondary-action,
+  .view-group button,
+  .upload-dropzone,
   .artwork-card,
   .artwork-visual img,
   .artwork-hitarea::before,
@@ -2625,7 +3122,8 @@ h1 b {
   }
 
   .artwork-modal,
-  .modal-artwork {
+  .modal-artwork,
+  .artworks-grid.is-grid .artwork-card {
     animation: none;
   }
 }
