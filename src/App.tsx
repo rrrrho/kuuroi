@@ -7,79 +7,111 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import './App.css'
-import artistPortrait from './assets/artist-portrait.jpg'
-import workCalice from './assets/work-calice.jpg'
-import workCrepuscule from './assets/work-crepuscule.jpg'
-import workFlosMortis from './assets/work-flos-mortis.jpg'
-import workMirrors from './assets/work-mirrors.jpg'
-import workNocturne from './assets/work-nocturne.jpg'
-import workPeonies from './assets/work-peonies.jpg'
+import artistPortrait from './assets/mar.jpg'
+import workElvis from './assets/elvis.jpeg'
+import ferra from './assets/ferra.jpeg'
+import nosferatu from './assets/nosferatu.jpeg'
+import workSilent from './assets/silent.jpeg'
+import frank from './assets/frankestein.jpeg'
+import silent from './assets/silent.jpeg'
+import scissor from './assets/scissor.jpeg'
+import chad from './assets/chad.jpeg'
+import girl from './assets/girlitalia.jpeg'
+import desnuda from './assets/desnuda.jpeg'
+import iron from './assets/iron.jpeg'
+import escultura from './assets/escultura.jpeg'
+import dagas from './assets/dagas.jpeg'
 
 const works = [
   {
-    image: workCrepuscule,
-    alt: 'Figura cubierta de marfil recorriendo una catedral en penumbra',
-    medium: 'ÓLEO SOBRE LIENZO',
-    name: "L'Étreinte du Crépuscule",
+    image: frank,
     year: '2025',
     title: "L'ÉTREINTE DU CRÉPUSCULE",
-    description: 'Óleo sobre lino belga, pigmentos de cinabrio y asfalto negro',
-    status: 'COLECCIÓN PRIVADA',
+    description: 'Óleo sobre lienzo en medida de 40x40',
     layout: 'work-wide',
   },
   {
-    image: workPeonies,
-    alt: 'Peonías carmesí emergiendo sobre un fondo negro',
-    medium: 'ÓLEO SOBRE TABLA',
-    name: 'Vanitas Sanguinis: Peonías en Llamas',
-    year: '2024',
+    image: silent,
+    year: '2025',
     title: 'VANITAS SANGUINIS: PEONÍAS EN LLAMAS',
-    description: 'Óleo y resina de damar sobre tabla de nogal encerada',
-    status: 'DISPONIBLE',
+    description: 'Óleo sobre lienzo en medida de 50x70',
     layout: 'work-narrow',
   },
   {
-    image: workCalice,
-    alt: 'Mano esquelética sosteniendo una copa frente a una luna dorada',
-    medium: 'ÓLEO SOBRE LIENZO',
-    name: "Le Calice d'Ébène",
+    image: scissor,
     year: '2024',
     title: "LE CALICE D'ÉBÈNE",
     description: 'Óleo tenebrista con barniz holandés brillante',
-    status: 'DISPONIBLE',
     layout: 'work-narrow',
   },
   {
-    image: workMirrors,
-    alt: 'Velas rojas encendidas junto a un espejo antiguo',
-    medium: 'ÓLEO SOBRE LIENZO',
-    name: 'La Vigilia de los Espejos Sombríos',
-    year: '2025',
+    image: workElvis,
+    year: '2024',
     title: 'LA VIGILIA DE LOS ESPEJOS SOMBRÍOS',
-    description: 'Óleo con empastes densos y pigmentos fluorescentes orgánicos',
-    status: 'DISPONIBLE',
+    description: 'Óleo sobre lienzo en medida de 40x60',
     layout: 'work-wide',
   },
   {
-    image: workFlosMortis,
-    alt: 'Flor de pétalos marfil atravesados por vetas carmesí',
-    medium: 'ÓLEO SOBRE TABLA',
-    name: 'Flos Mortis: La Flor Cadavérica',
-    year: '2024',
-    title: 'FLOS MORTIS: LA FLOR CADAVÉRICA',
-    description: 'Óleo sobre tabla estucada con veladuras sucesivas de cochinilla',
-    status: 'DISPONIBLE',
+    image: chad,
+    year: '2025',
+    title: 'Starker als Angst',
+    description: 'Óleo sobre lienzo en medida de 50x70',
     layout: 'work-narrow',
   },
   {
-    image: workNocturne,
-    alt: 'Figura solitaria ante la entrada de una cripta bajo una luna roja',
-    medium: 'ÓLEO SOBRE LIENZO',
-    name: 'Nocturne in Crypta: El Despertar',
+    image: desnuda,
+    year: '2024',
+    title: 'Picture You',
+    description: 'Óleo sobre lienzo en medida de 40x60',
+    layout: 'work-narrow',
+  },
+  {
+    image: workSilent,
+    year: '2026',
+    title: 'Estudio de Ferragamo',
+    description: 'Óleo sobre lienzo en medida de 40x60',
+    layout: 'work-narrow',
+  },
+  {
+    image: girl,
+    year: '2026',
+    title: 'Estudio de retrato a color',
+    description: 'Óleo sobre lienzo en medida de 50x70',
+    layout: 'work-wide',
+  },
+  {
+    image: ferra,
+    year: '2026',
+    title: 'ESTUDIO DE FERRAGAMO',
+    description: 'Óleo sobre lienzo en medida de 40x60',
+    layout: 'work-narrow',
+  },
+  {
+    image: nosferatu,
     year: '2025',
-    title: 'NOCTURNE IN CRYPTA: EL DESPERTAR',
-    description: 'Óleo sobre lino grueso con barniz de betún diluido',
-    status: 'COLECCIÓN PRIVADA',
+    title: 'NOSFERATU',
+    description: 'Grafito sobre papel en medida de 20x30',
+    layout: 'work-full',
+  },
+  {
+    image: iron,
+    year: '2025',
+    title: 'SOMEWHERE IN TIME',
+    description: 'Estudio figurativo de inspiración biomecánica y urbana',
+    layout: 'work-narrow',
+  },
+  {
+    image: escultura,
+    year: '2025',
+    title: 'ESTUDIO ESCULTÓRICO',
+    description: 'Estudio anatómico en grafito de una figura clásica',
+    layout: 'work-narrow',
+  },
+  {
+    image: dagas,
+    year: '2025',
+    title: 'DAGAS',
+    description: 'Composición simbólica en grafito con ornamentación gótica',
     layout: 'work-narrow',
   },
 ]
@@ -90,26 +122,6 @@ const MAX_UPLOAD_BYTES = 7 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error'
-type RequiredField = 'name' | 'email' | 'details'
-
-const requiredFieldMessages: Record<RequiredField, string> = {
-  name: 'Ingresá tu nombre completo.',
-  email: 'Ingresá tu correo electrónico.',
-  details: 'Contanos las dimensiones, técnica o detalles del encargo.',
-}
-
-function getFieldError(field: RequiredField, value: string) {
-  if (!value.trim()) return requiredFieldMessages[field]
-
-  if (
-    field === 'email' &&
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
-  ) {
-    return 'Ingresá un correo electrónico válido.'
-  }
-
-  return ''
-}
 
 function FlameIcon() {
   return (
@@ -190,14 +202,7 @@ function ArtworkCard({
   return (
     <article className={`artwork-card ${work.layout}`}>
       <figure className="artwork-visual">
-        <img src={work.image} alt={work.alt} />
-        <figcaption>
-          <span>
-            <strong>{work.medium}</strong>
-            <em>{work.name}</em>
-          </span>
-          <time>{work.year}</time>
-        </figcaption>
+        <img src={work.image} alt="" loading="lazy" decoding="async" />
         <button
           className="artwork-hitarea"
           type="button"
@@ -219,7 +224,6 @@ function ArtworkCard({
         </span>
         <span className="artwork-state">
           <time>{work.year}</time>
-          <small>{work.status}</small>
         </span>
       </footer>
     </article>
@@ -239,9 +243,6 @@ function App() {
   const [uploadError, setUploadError] = useState('')
   const [submitState, setSubmitState] = useState<SubmitState>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
-  const [fieldErrors, setFieldErrors] = useState<
-    Partial<Record<RequiredField, string>>
-  >({})
   const referenceImageUrls = useRef<string[]>([])
   const inquiryForm = useRef<HTMLFormElement>(null)
 
@@ -336,74 +337,12 @@ function App() {
     setUploadError('')
   }
 
-  const clearFieldError = (field: RequiredField) => {
-    setFieldErrors((current) => {
-      if (!current[field]) return current
-
-      const nextErrors = { ...current }
-      delete nextErrors[field]
-      return nextErrors
-    })
-
-    if (submitState !== 'submitting') {
-      setSubmitState('idle')
-      setSubmitMessage('')
-    }
-  }
-
-  const validateField = (field: RequiredField, value: string) => {
-    const error = getFieldError(field, value)
-    setFieldErrors((current) => {
-      const nextErrors = { ...current }
-      if (error) nextErrors[field] = error
-      else delete nextErrors[field]
-      return nextErrors
-    })
-  }
-
   const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (submitState === 'submitting') return
 
     const form = event.currentTarget
     const formData = new FormData(form)
-
-    const requiredValues: Record<RequiredField, string> = {
-      name: String(formData.get('name') ?? ''),
-      email: String(formData.get('email') ?? ''),
-      details: String(formData.get('details') ?? ''),
-    }
-    const nextFieldErrors = (
-      Object.entries(requiredValues) as Array<[RequiredField, string]>
-    ).reduce<Partial<Record<RequiredField, string>>>(
-      (errors, [field, value]) => {
-        const error = getFieldError(field, value)
-        if (error) errors[field] = error
-        return errors
-      },
-      {},
-    )
-
-    if (Object.keys(nextFieldErrors).length > 0) {
-      setFieldErrors(nextFieldErrors)
-      setSubmitState('idle')
-      setSubmitMessage('')
-      const firstInvalidField = Object.keys(
-        nextFieldErrors,
-      )[0] as RequiredField
-      ;(
-        form.elements.namedItem(firstInvalidField) as
-          | HTMLInputElement
-          | HTMLTextAreaElement
-      )?.focus()
-      return
-    }
-
-    setFieldErrors({})
-
-    for (let index = 1; index <= MAX_REFERENCE_IMAGES; index += 1) {
-      formData.delete(`reference_image_${index}`)
-    }
 
     referenceImages.forEach((image, index) => {
       formData.append(
@@ -427,7 +366,6 @@ function App() {
 
       form.reset()
       clearReferenceImages()
-      setFieldErrors({})
       setSubmitState('success')
       setSubmitMessage('Tu consulta fue enviada correctamente.')
     } catch {
@@ -690,7 +628,6 @@ function App() {
               data-netlify="true"
               data-netlify-honeypot="bot-field"
               aria-label="Consulta de obra"
-              noValidate
               onSubmit={handleInquirySubmit}
             >
               <input type="hidden" name="form-name" value={CONTACT_FORM_NAME} />
@@ -721,20 +658,7 @@ function App() {
                     placeholder="Tu nombre completo"
                     autoComplete="name"
                     required
-                    aria-invalid={Boolean(fieldErrors.name)}
-                    aria-describedby={
-                      fieldErrors.name ? 'name-error' : undefined
-                    }
-                    onBlur={(event) =>
-                      validateField('name', event.currentTarget.value)
-                    }
-                    onChange={() => clearFieldError('name')}
                   />
-                  {fieldErrors.name && (
-                    <small className="field-error" id="name-error">
-                      {fieldErrors.name}
-                    </small>
-                  )}
                 </label>
 
                 <label>
@@ -745,20 +669,7 @@ function App() {
                     placeholder="tu@email.com"
                     autoComplete="email"
                     required
-                    aria-invalid={Boolean(fieldErrors.email)}
-                    aria-describedby={
-                      fieldErrors.email ? 'email-error' : undefined
-                    }
-                    onBlur={(event) =>
-                      validateField('email', event.currentTarget.value)
-                    }
-                    onChange={() => clearFieldError('email')}
                   />
-                  {fieldErrors.email && (
-                    <small className="field-error" id="email-error">
-                      {fieldErrors.email}
-                    </small>
-                  )}
                 </label>
 
                 <label>
@@ -851,20 +762,7 @@ function App() {
                     name="details"
                     placeholder="Dimensiones deseadas, técnica, soporte o detalles del encargo..."
                     required
-                    aria-invalid={Boolean(fieldErrors.details)}
-                    aria-describedby={
-                      fieldErrors.details ? 'details-error' : undefined
-                    }
-                    onBlur={(event) =>
-                      validateField('details', event.currentTarget.value)
-                    }
-                    onChange={() => clearFieldError('details')}
                   />
-                  {fieldErrors.details && (
-                    <small className="field-error" id="details-error">
-                      {fieldErrors.details}
-                    </small>
-                  )}
                 </label>
               </div>
 
@@ -968,12 +866,9 @@ function App() {
               ×
             </button>
             <figure className="modal-artwork">
-              <img src={selectedWork.image} alt={selectedWork.alt} />
+              <img src={selectedWork.image} alt="" />
               <figcaption>
-                <span>
-                  <small>{selectedWork.medium}</small>
-                  <strong>{selectedWork.title}</strong>
-                </span>
+                <strong>{selectedWork.title}</strong>
                 <time>{selectedWork.year}</time>
               </figcaption>
             </figure>
