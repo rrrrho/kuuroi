@@ -117,6 +117,7 @@ const works = [
 ]
 
 const CONTACT_FORM_NAME = 'commission-request'
+const CONTACT_FORM_WITH_IMAGES_NAME = 'commission-request-with-images'
 const MAX_REFERENCE_IMAGES = 6
 const MAX_UPLOAD_BYTES = 7 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
@@ -245,6 +246,10 @@ function App() {
   const [submitMessage, setSubmitMessage] = useState('')
   const referenceImageUrls = useRef<string[]>([])
   const inquiryForm = useRef<HTMLFormElement>(null)
+  const contactFormName =
+    referenceImages.length > 0
+      ? CONTACT_FORM_WITH_IMAGES_NAME
+      : CONTACT_FORM_NAME
 
   useEffect(() => {
     if (!selectedWork) return
@@ -343,6 +348,8 @@ function App() {
 
     const form = event.currentTarget
     const formData = new FormData(form)
+
+    formData.set('form-name', contactFormName)
 
     referenceImages.forEach((image, index) => {
       formData.append(
@@ -465,7 +472,7 @@ function App() {
                 />
                 <figcaption>
                   <span>Retrato tomado en Florencia, Italia</span>
-                  <span>Circa 2024</span>
+                  <span>Circa 2026</span>
                 </figcaption>
               </figure>
 
@@ -614,7 +621,7 @@ function App() {
             <form
               ref={inquiryForm}
               className="inquiry-card"
-              name={CONTACT_FORM_NAME}
+              name={contactFormName}
               method="POST"
               encType="multipart/form-data"
               data-netlify="true"
@@ -622,7 +629,7 @@ function App() {
               aria-label="Consulta de obra"
               onSubmit={handleInquirySubmit}
             >
-              <input type="hidden" name="form-name" value={CONTACT_FORM_NAME} />
+              <input type="hidden" name="form-name" value={contactFormName} />
               <input
                 type="hidden"
                 name="subject"

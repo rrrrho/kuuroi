@@ -31,6 +31,31 @@
       </select>
       <input type="text" name="artwork_reference" />
       <textarea name="details"></textarea>
+    </form>
+    <form
+      name="commission-request-with-images"
+      method="POST"
+      enctype="multipart/form-data"
+      data-netlify="true"
+      data-netlify-honeypot="bot-field"
+      hidden
+    >
+      <input
+        type="hidden"
+        name="form-name"
+        value="commission-request-with-images"
+      />
+      <input type="hidden" name="subject" value="Nueva consulta desde KUUROI" />
+      <input name="bot-field" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <select name="inquiry_type">
+        <option value="adquisicion">Adquisición de Lienzo al Óleo</option>
+        <option value="comision">Comisión personalizada</option>
+        <option value="informacion">Información sobre una obra</option>
+      </select>
+      <input type="text" name="artwork_reference" />
+      <textarea name="details"></textarea>
       <input type="file" name="reference_image_1" />
       <input type="file" name="reference_image_2" />
       <input type="file" name="reference_image_3" />
