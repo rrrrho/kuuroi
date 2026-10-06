@@ -11,7 +11,6 @@ import artistPortrait from './assets/mar.jpg'
 import workElvis from './assets/elvis.jpeg'
 import ferra from './assets/ferra.jpeg'
 import nosferatu from './assets/nosferatu.jpeg'
-import workSilent from './assets/silent.jpeg'
 import frank from './assets/frankestein.jpeg'
 import silent from './assets/silent.jpeg'
 import scissor from './assets/scissor.jpeg'
@@ -21,61 +20,62 @@ import desnuda from './assets/desnuda.jpeg'
 import iron from './assets/iron.jpeg'
 import escultura from './assets/escultura.jpeg'
 import dagas from './assets/dagas.jpeg'
+import pareja from './assets/pareja.jpeg'
 
 const works = [
   {
     image: frank,
     year: '2025',
-    title: "L'ÉTREINTE DU CRÉPUSCULE",
+    title: "A LEAF? FOR ME?",
     description: 'Óleo sobre lienzo en medida de 40x40',
     layout: 'work-wide',
   },
   {
     image: silent,
     year: '2025',
-    title: 'VANITAS SANGUINIS: PEONÍAS EN LLAMAS',
+    title: 'SILENT HILL III',
     description: 'Óleo sobre lienzo en medida de 50x70',
     layout: 'work-narrow',
   },
   {
     image: scissor,
     year: '2024',
-    title: "LE CALICE D'ÉBÈNE",
-    description: 'Óleo tenebrista con barniz holandés brillante',
+    title: "PICTURE YOU",
+    description: 'Óleo sobre lienzo en medida de 40x60',
     layout: 'work-narrow',
   },
   {
     image: workElvis,
     year: '2024',
-    title: 'LA VIGILIA DE LOS ESPEJOS SOMBRÍOS',
+    title: 'ELVIS',
     description: 'Óleo sobre lienzo en medida de 40x60',
     layout: 'work-wide',
   },
   {
     image: chad,
     year: '2025',
-    title: 'Starker als Angst',
+    title: 'STARKER ALS ANGST',
     description: 'Óleo sobre lienzo en medida de 50x70',
     layout: 'work-narrow',
   },
   {
     image: desnuda,
-    year: '2024',
-    title: 'Picture You',
-    description: 'Óleo sobre lienzo en medida de 40x60',
+    year: '2026',
+    title: 'ESTUDIO DE EDUARDO SÍVORI',
+    description: 'Óleo sobre lienzo en medida de 30x40',
     layout: 'work-narrow',
   },
   {
-    image: workSilent,
-    year: '2026',
-    title: 'Estudio de Ferragamo',
-    description: 'Óleo sobre lienzo en medida de 40x60',
+    image: pareja,
+    year: '2025',
+    title: 'NORMAL PEOPLE',
+    description: 'Óleo sobre lienzo en medida de 50x70',
     layout: 'work-narrow',
   },
   {
     image: girl,
     year: '2026',
-    title: 'Estudio de retrato a color',
+    title: 'ESTUDIO DE RETRATO A COLOR',
     description: 'Óleo sobre lienzo en medida de 50x70',
     layout: 'work-wide',
   },
@@ -97,21 +97,21 @@ const works = [
     image: iron,
     year: '2025',
     title: 'SOMEWHERE IN TIME',
-    description: 'Estudio figurativo de inspiración biomecánica y urbana',
+    description: 'Óleo sobre lienzo en medida de 40x40',
     layout: 'work-narrow',
   },
   {
     image: escultura,
-    year: '2025',
-    title: 'ESTUDIO ESCULTÓRICO',
-    description: 'Estudio anatómico en grafito de una figura clásica',
+    year: '2026',
+    title: 'ESTUDIO DE LA GALERÍA DE LA ACADEMIA DE VENECIA',
+    description: 'Grafito sobre papel en medida de 30x40',
     layout: 'work-narrow',
   },
   {
     image: dagas,
     year: '2025',
-    title: 'DAGAS',
-    description: 'Composición simbólica en grafito con ornamentación gótica',
+    title: 'PRINCE CNUT',
+    description: 'Grafito sobre papel en medida de 30x40',
     layout: 'work-narrow',
   },
 ]
