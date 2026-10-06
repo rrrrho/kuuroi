@@ -346,7 +346,8 @@ h1 b {
 }
 
 @media (hover: hover) {
-  .primary-action:hover {
+  .primary-action:hover,
+  .dispatch-button:not(:disabled):hover {
     border-color: #dd2639;
     background: linear-gradient(180deg, #951424 0%, #79101b 100%);
     box-shadow:
@@ -355,7 +356,8 @@ h1 b {
     transform: translateY(-1px);
   }
 
-  .primary-action:hover svg {
+  .primary-action:hover svg,
+  .dispatch-button:not(:disabled):hover svg {
     transform: translateY(2px);
   }
 
@@ -370,7 +372,8 @@ h1 b {
   }
 }
 
-.primary-action:focus-visible {
+.primary-action:focus-visible,
+.dispatch-button:focus-visible {
   border-color: #dd2639;
   outline: 1px solid #dd2639;
   outline-offset: 3px;
@@ -1433,6 +1436,19 @@ h1 b {
   border-color: rgba(151, 39, 48, 0.95);
 }
 
+.form-fields input[aria-invalid='true'],
+.form-fields textarea[aria-invalid='true'] {
+  border-color: #c82b3a;
+  box-shadow: inset 0 0 15px rgba(190, 28, 44, 0.08);
+}
+
+.field-error {
+  margin-top: -3px;
+  color: #dc6570;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
 .select-field {
   position: relative;
   display: block;
@@ -1676,15 +1692,8 @@ h1 b {
     border-color 220ms ease,
     background 220ms ease,
     box-shadow 220ms ease,
-    opacity 220ms ease;
-}
-
-.dispatch-button:hover,
-.dispatch-button:focus-visible {
-  border-color: #d72a3a;
-  outline: none;
-  background: linear-gradient(180deg, #991624, #790e19);
-  box-shadow: 0 0 22px rgba(168, 18, 33, 0.2);
+    opacity 220ms ease,
+    transform 220ms ease;
 }
 
 .dispatch-button:disabled {
@@ -1697,6 +1706,7 @@ h1 b {
   height: 17px;
   stroke: #d6a15c;
   stroke-width: 1.5;
+  transition: transform 260ms ease;
 }
 
 .form-status {
@@ -1866,6 +1876,7 @@ h1 b {
   background: rgba(24, 9, 12, 0.72);
   font-size: 10px;
   letter-spacing: 0.08em;
+  text-decoration: none;
 }
 
 .back-to-top span {
@@ -2028,7 +2039,8 @@ h1 b {
 
   .hero-content {
     width: calc(100% - 28px);
-    padding: clamp(76px, 20svh, 135px) 0 24px;
+    padding: clamp(28px, 7svh, 52px) 0;
+    justify-content: center;
   }
 
   .eyebrow {
@@ -2832,6 +2844,10 @@ h1 b {
     padding: 11px 12px;
   }
 
+  .field-error {
+    font-size: 7px;
+  }
+
   .upload-field {
     gap: 7px;
   }
@@ -3106,6 +3122,8 @@ h1 b {
   .primary-action,
   .primary-action svg,
   .secondary-action,
+  .dispatch-button,
+  .dispatch-button svg,
   .view-group button,
   .upload-dropzone,
   .artwork-card,
@@ -3117,7 +3135,9 @@ h1 b {
 
   .primary-action:hover,
   .primary-action:hover svg,
-  .secondary-action:hover {
+  .secondary-action:hover,
+  .dispatch-button:hover,
+  .dispatch-button:hover svg {
     transform: none;
   }
 

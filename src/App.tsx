@@ -90,6 +90,26 @@ const MAX_UPLOAD_BYTES = 7 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error'
+type RequiredField = 'name' | 'email' | 'details'
+
+const requiredFieldMessages: Record<RequiredField, string> = {
+  name: 'Ingresá tu nombre completo.',
+  email: 'Ingresá tu correo electrónico.',
+  details: 'Contanos las dimensiones, técnica o detalles del encargo.',
+}
+
+function getFieldError(field: RequiredField, value: string) {
+  if (!value.trim()) return requiredFieldMessages[field]
+
+  if (
+    field === 'email' &&
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
+  ) {
+    return 'Ingresá un correo electrónico válido.'
+  }
+
+  return ''
+}
 
 function FlameIcon() {
   return (
@@ -219,6 +239,9 @@ function App() {
   const [uploadError, setUploadError] = useState('')
   const [submitState, setSubmitState] = useState<SubmitState>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<RequiredField, string>>
+  >({})
   const referenceImageUrls = useRef<string[]>([])
   const inquiryForm = useRef<HTMLFormElement>(null)
 
@@ -313,12 +336,74 @@ function App() {
     setUploadError('')
   }
 
+  const clearFieldError = (field: RequiredField) => {
+    setFieldErrors((current) => {
+      if (!current[field]) return current
+
+      const nextErrors = { ...current }
+      delete nextErrors[field]
+      return nextErrors
+    })
+
+    if (submitState !== 'submitting') {
+      setSubmitState('idle')
+      setSubmitMessage('')
+    }
+  }
+
+  const validateField = (field: RequiredField, value: string) => {
+    const error = getFieldError(field, value)
+    setFieldErrors((current) => {
+      const nextErrors = { ...current }
+      if (error) nextErrors[field] = error
+      else delete nextErrors[field]
+      return nextErrors
+    })
+  }
+
   const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (submitState === 'submitting') return
 
     const form = event.currentTarget
     const formData = new FormData(form)
+
+    const requiredValues: Record<RequiredField, string> = {
+      name: String(formData.get('name') ?? ''),
+      email: String(formData.get('email') ?? ''),
+      details: String(formData.get('details') ?? ''),
+    }
+    const nextFieldErrors = (
+      Object.entries(requiredValues) as Array<[RequiredField, string]>
+    ).reduce<Partial<Record<RequiredField, string>>>(
+      (errors, [field, value]) => {
+        const error = getFieldError(field, value)
+        if (error) errors[field] = error
+        return errors
+      },
+      {},
+    )
+
+    if (Object.keys(nextFieldErrors).length > 0) {
+      setFieldErrors(nextFieldErrors)
+      setSubmitState('idle')
+      setSubmitMessage('')
+      const firstInvalidField = Object.keys(
+        nextFieldErrors,
+      )[0] as RequiredField
+      ;(
+        form.elements.namedItem(firstInvalidField) as
+          | HTMLInputElement
+          | HTMLTextAreaElement
+      )?.focus()
+      return
+    }
+
+    setFieldErrors({})
+
+    for (let index = 1; index <= MAX_REFERENCE_IMAGES; index += 1) {
+      formData.delete(`reference_image_${index}`)
+    }
 
     referenceImages.forEach((image, index) => {
       formData.append(
@@ -342,6 +427,7 @@ function App() {
 
       form.reset()
       clearReferenceImages()
+      setFieldErrors({})
       setSubmitState('success')
       setSubmitMessage('Tu consulta fue enviada correctamente.')
     } catch {
@@ -353,7 +439,7 @@ function App() {
   }
 
   return (
-    <main className="page-shell">
+    <main className="page-shell" id="inicio">
       <header className="site-header">
         <div className="header-inner">
           <div className="wordmark" aria-label="Kuuroi">
@@ -366,10 +452,10 @@ function App() {
             <a href="#contacto">CONTACTO</a>
           </nav>
 
-          <button className="commission-button" type="button">
+          <a className="commission-button" href="#contacto">
             <MailIcon />
             <span>COMISIONES</span>
-          </button>
+          </a>
         </div>
       </header>
 
@@ -604,6 +690,7 @@ function App() {
               data-netlify="true"
               data-netlify-honeypot="bot-field"
               aria-label="Consulta de obra"
+              noValidate
               onSubmit={handleInquirySubmit}
             >
               <input type="hidden" name="form-name" value={CONTACT_FORM_NAME} />
@@ -634,7 +721,20 @@ function App() {
                     placeholder="Tu nombre completo"
                     autoComplete="name"
                     required
+                    aria-invalid={Boolean(fieldErrors.name)}
+                    aria-describedby={
+                      fieldErrors.name ? 'name-error' : undefined
+                    }
+                    onBlur={(event) =>
+                      validateField('name', event.currentTarget.value)
+                    }
+                    onChange={() => clearFieldError('name')}
                   />
+                  {fieldErrors.name && (
+                    <small className="field-error" id="name-error">
+                      {fieldErrors.name}
+                    </small>
+                  )}
                 </label>
 
                 <label>
@@ -645,7 +745,20 @@ function App() {
                     placeholder="tu@email.com"
                     autoComplete="email"
                     required
+                    aria-invalid={Boolean(fieldErrors.email)}
+                    aria-describedby={
+                      fieldErrors.email ? 'email-error' : undefined
+                    }
+                    onBlur={(event) =>
+                      validateField('email', event.currentTarget.value)
+                    }
+                    onChange={() => clearFieldError('email')}
                   />
+                  {fieldErrors.email && (
+                    <small className="field-error" id="email-error">
+                      {fieldErrors.email}
+                    </small>
+                  )}
                 </label>
 
                 <label>
@@ -738,7 +851,20 @@ function App() {
                     name="details"
                     placeholder="Dimensiones deseadas, técnica, soporte o detalles del encargo..."
                     required
+                    aria-invalid={Boolean(fieldErrors.details)}
+                    aria-describedby={
+                      fieldErrors.details ? 'details-error' : undefined
+                    }
+                    onBlur={(event) =>
+                      validateField('details', event.currentTarget.value)
+                    }
+                    onChange={() => clearFieldError('details')}
                   />
+                  {fieldErrors.details && (
+                    <small className="field-error" id="details-error">
+                      {fieldErrors.details}
+                    </small>
+                  )}
                 </label>
               </div>
 
@@ -815,9 +941,9 @@ function App() {
             <strong>KUUROI</strong>
             <small>Todos los derechos reservados · 2026</small>
           </div>
-          <button className="back-to-top" type="button">
+          <a className="back-to-top" href="#inicio">
             CIMA <span>↑</span>
-          </button>
+          </a>
         </div>
       </footer>
 
