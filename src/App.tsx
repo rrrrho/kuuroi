@@ -213,7 +213,7 @@ function ArtworkCard({
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8.5 3H3v5.5M15.5 21H21v-5.5M3 8.5 9 2.5M21 15.5l-6 6" />
             </svg>
-            AMPLIAR IMAGEN
+            <span className="expand-label">AMPLIAR IMAGEN</span>
           </span>
         </button>
       </figure>
