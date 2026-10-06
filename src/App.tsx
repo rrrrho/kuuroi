@@ -488,7 +488,7 @@ function App() {
                   de mi desarrollo.
                 </p>
                 <p>
-                  Grandes referentes como Héctor Giuffré influyeron en mis
+                  Grandes referentes como Takehiko Inoue influyeron en mis
                   comienzos como artista junto a pintores como Eduardo Sívori y
                   referentes internacionales del expresionismo tradicional.
                 </p>
@@ -595,14 +595,6 @@ function App() {
             ))}
           </div>
 
-          <footer className="catalog-note">
-            <p>
-              Todas las obras son piezas únicas creadas al óleo sobre soportes
-              tradicionales preparados a mano. No se producen reproducciones
-              digitales ni giclée comerciales.
-            </p>
-            <strong>ARCHIVADO BAJO EL SELLO DEL MURCIÉLAGO DE ÉBANO</strong>
-          </footer>
         </div>
       </section>
 

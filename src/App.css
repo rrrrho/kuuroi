@@ -2422,7 +2422,7 @@ h1 b {
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 901px) and (max-width: 1439px) {
   :root {
     --header-height: 63px;
   }
