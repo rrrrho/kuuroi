@@ -66,6 +66,12 @@ button {
   min-height: 100vh;
 }
 
+@media (min-width: 1440px) {
+  :root {
+    font-size-adjust: 0.5;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
