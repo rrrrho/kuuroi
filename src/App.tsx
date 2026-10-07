@@ -123,6 +123,42 @@ const MAX_UPLOAD_BYTES = 7 * 1024 * 1024
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error'
+type InquiryField = 'name' | 'email' | 'details'
+type InquiryErrors = Partial<Record<InquiryField, string>>
+
+const getInquiryFieldError = (
+  field: InquiryField,
+  input: HTMLInputElement | HTMLTextAreaElement,
+) => {
+  if (!input.value.trim()) {
+    if (field === 'name') return 'Ingresá tu nombre para continuar.'
+    if (field === 'email') return 'Ingresá tu correo electrónico para continuar.'
+    return 'Contanos los detalles o el formato que necesitás.'
+  }
+
+  if (field === 'email' && input.validity.typeMismatch) {
+    return 'Ingresá un correo electrónico válido.'
+  }
+
+  return ''
+}
+
+const validateInquiryForm = (form: HTMLFormElement) => {
+  const errors: InquiryErrors = {}
+  const fields: InquiryField[] = ['name', 'email', 'details']
+
+  fields.forEach((field) => {
+    const input = form.elements.namedItem(field)
+    if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement)) {
+      return
+    }
+
+    const error = getInquiryFieldError(field, input)
+    if (error) errors[field] = error
+  })
+
+  return errors
+}
 
 function FlameIcon() {
   return (
@@ -242,6 +278,7 @@ function App() {
     Array<{ id: string; file: File; url: string }>
   >([])
   const [uploadError, setUploadError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<InquiryErrors>({})
   const [submitState, setSubmitState] = useState<SubmitState>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
   const referenceImageUrls = useRef<string[]>([])
@@ -342,11 +379,43 @@ function App() {
     setUploadError('')
   }
 
+  const handleInquiryFieldChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const field = event.currentTarget.name as InquiryField
+    if (!fieldErrors[field]) return
+
+    const error = getInquiryFieldError(field, event.currentTarget)
+    setFieldErrors((current) => {
+      const nextErrors = { ...current }
+      if (error) nextErrors[field] = error
+      else delete nextErrors[field]
+      return nextErrors
+    })
+  }
+
   const handleInquirySubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (submitState === 'submitting') return
 
     const form = event.currentTarget
+    const errors = validateInquiryForm(form)
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      setSubmitMessage('')
+      const firstInvalidField = Object.keys(errors)[0]
+      const firstInvalidInput = form.elements.namedItem(firstInvalidField)
+      if (
+        firstInvalidInput instanceof HTMLInputElement ||
+        firstInvalidInput instanceof HTMLTextAreaElement
+      ) {
+        firstInvalidInput.focus()
+      }
+      return
+    }
+
+    setFieldErrors({})
     const formData = new FormData(form)
 
     formData.set('form-name', contactFormName)
@@ -627,6 +696,7 @@ function App() {
               data-netlify="true"
               data-netlify-honeypot="bot-field"
               aria-label="Consulta de obra"
+              noValidate
               onSubmit={handleInquirySubmit}
             >
               <input type="hidden" name="form-name" value={contactFormName} />
@@ -656,8 +726,16 @@ function App() {
                     name="name"
                     placeholder="Tu nombre completo"
                     autoComplete="name"
+                    aria-invalid={Boolean(fieldErrors.name)}
+                    aria-describedby={fieldErrors.name ? 'name-error' : undefined}
+                    onChange={handleInquiryFieldChange}
                     required
                   />
+                  {fieldErrors.name && (
+                    <small className="field-error" id="name-error" role="alert">
+                      {fieldErrors.name}
+                    </small>
+                  )}
                 </label>
 
                 <label>
@@ -667,8 +745,16 @@ function App() {
                     name="email"
                     placeholder="tu@email.com"
                     autoComplete="email"
+                    aria-invalid={Boolean(fieldErrors.email)}
+                    aria-describedby={fieldErrors.email ? 'email-error' : undefined}
+                    onChange={handleInquiryFieldChange}
                     required
                   />
+                  {fieldErrors.email && (
+                    <small className="field-error" id="email-error" role="alert">
+                      {fieldErrors.email}
+                    </small>
+                  )}
                 </label>
 
                 <label>
@@ -693,7 +779,9 @@ function App() {
 
                 <div className="upload-field">
                   <span className="upload-label">IMÁGENES DE REFERENCIA</span>
-                  <label className="upload-dropzone">
+                  <label
+                    className={`upload-dropzone${uploadError ? ' is-invalid' : ''}`}
+                  >
                     <input
                       className="upload-input"
                       type="file"
@@ -760,8 +848,16 @@ function App() {
                   <textarea
                     name="details"
                     placeholder="Dimensiones deseadas, técnica, soporte o detalles del encargo..."
+                    aria-invalid={Boolean(fieldErrors.details)}
+                    aria-describedby={fieldErrors.details ? 'details-error' : undefined}
+                    onChange={handleInquiryFieldChange}
                     required
                   />
+                  {fieldErrors.details && (
+                    <small className="field-error" id="details-error" role="alert">
+                      {fieldErrors.details}
+                    </small>
+                  )}
                 </label>
               </div>
 
